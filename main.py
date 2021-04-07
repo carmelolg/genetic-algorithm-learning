@@ -1,35 +1,46 @@
+import random
+
 from Constants import Constants
 from Population import Population
 
 
 class GeneticAlgorithm:
     constants = Constants()
+    population_object = Population()
+
+    def mutation(self, x):
+        tmp_word = list(x.word)
+        tmp_word[random.randint(0, len(x.word) - 1)] = random.choice(self.constants.all_chars)
+        x.word = "".join(tmp_word)
+        x.fitness = self.population_object.fitness(x.word)
 
     def run(self):
 
         loop = True
         local_generations = 0
 
-        population = Population()
-
         # STEP 1 - generate a random population
-        population.generate(self.constants.population_number)
+        self.population_object.generate(self.constants.population_number)
 
         while local_generations < self.constants.generations and loop:
-            population_list = population.get_population()
+            population_list = self.population_object.get_population()
 
             i = 0
             for k in range(int(len(population_list) / 2)):
-                # STEP 2 - the evolution of the species
-                population.crossover(population_list[i], population_list[i + 1])
+                # STEP 2 - the evolution of the species (with mutation if needed)
+                new_i = self.population_object.crossover(population_list[i], population_list[i + 1])
+                r = random.random()
+
+                if r > self.constants.mutation_threshold:
+                    self.mutation(new_i)
+
+                self.population_object.population.append(new_i)
                 i = i + 2
 
             # STEP 3 - remove all members that are not fitting the solution
-            population.natural_selection()
+            self.population_object.natural_selection()
 
-            best_individual = population.get_population()[0]
-
-            local_generations = local_generations + 1
+            best_individual = self.population_object.get_population()[0]
 
             # STEP 4 - exit condition
             if best_individual.fitness == 0:
@@ -37,6 +48,8 @@ class GeneticAlgorithm:
                 loop = False
             else:
                 print(best_individual, "still not the best")
+
+            local_generations = local_generations + 1
 
 
 runner = GeneticAlgorithm()

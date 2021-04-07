@@ -36,12 +36,6 @@ class Population:
                 word_generated = word_generated + random.choice(ascii_letters + ' ')
             self.population.append(Individual(word_generated, self.fitness(word_generated)))
 
-    def mutation(self, x):
-        tmp_word = list(x.word)
-        tmp_word[random.randint(0, len(x.word) - 1)] = random.choice(ascii_letters + ' ')
-        x.word = "".join(tmp_word)
-        x.fitness = self.fitness(x.word)
-
     def crossover(self, x, y):
 
         word_x = x.word
@@ -50,13 +44,8 @@ class Population:
 
         new = word_x[:half] + word_y[half:]
 
-        new_i = Individual(new, self.fitness(new))
-        r = random.random()
+        return Individual(new, self.fitness(new))
 
-        if r > self.constants.mutation_threshold:
-            self.mutation(new_i)
-
-        self.population.append(new_i)
 
     def natural_selection(self):
         self.sort()
