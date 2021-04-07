@@ -1,4 +1,5 @@
 import random
+import sys
 
 from Constants import Constants
 from Population import Population
@@ -44,10 +45,9 @@ class GeneticAlgorithm:
 
             # STEP 4 - exit condition
             if best_individual.fitness == 0:
-                print(best_individual.word)
                 loop = False
-            else:
-                print(best_individual, "still not the best")
+
+            print('\r' + best_individual.word, end='', flush=True)
 
             local_generations = local_generations + 1
 
