@@ -8,7 +8,6 @@ from Individual import Individual
 
 
 class Population:
-
     population = []
     constants = Constants()
 
@@ -45,7 +44,6 @@ class Population:
         new = word_x[:half] + word_y[half:]
 
         return Individual(new, self.fitness(new))
-
 
     def natural_selection(self):
         self.sort()
